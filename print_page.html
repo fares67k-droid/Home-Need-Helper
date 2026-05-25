@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>print_page</title>
+</head>
+
+<body>
+    <style>
+        /* ── Google Fonts ── */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Outfit:wght@500;700&display=swap');
+
+        /* ── Zero Reset ── */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,0.03) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.03) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.03) 0, transparent 50%);
+            background-attachment: fixed;
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        #fa { overflow: visible; }
+
+        /* ── Ultra Modern Button ── */
+        .b {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 99px;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 450px;
+            cursor: pointer;
+            box-shadow: 0 12px 25px -8px rgba(79, 70, 229, 0.5);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .b::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .b:hover::after {
+            left: 100%;
+        }
+
+        .b:hover {
+            background: var(--primary-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -8px rgba(79, 70, 229, 0.6);
+        }
+
+        .b p {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .b i {
+            font-size: 1.4rem;
+        }
+
+        /* ── Receipt Style Print Area ── */
+        .print_area {
+            background: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 0;
+            padding: 30px 25px 50px 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            font-family: 'Courier New', Courier, monospace;
+            color: #000;
+        }
+
+        /* Jagged bottom edge for receipt */
+        .print_area::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background-size: 16px 16px;
+            background-repeat: repeat-x;
+            background-image: linear-gradient(135deg, transparent 50%, white 50%), linear-gradient(45deg, white 50%, transparent 50%);
+            background-position: left bottom, left bottom;
+        }
+
+        /* Animated Robot */
+        .robot {
+            font-size: 3rem;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        /* ── Redesigned Table Wrapper ── */
+        .needs {
+            width: 100%;
+        }
+
+        .needs > div {
+            width: 100%;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        .need, .need tbody {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .hedest, .thing {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            padding: 5px 0;
+        }
+
+        .hedest {
+            background: transparent;
+            border-bottom: 2px dashed #000;
+            padding-left: 70px; /* Accounts for missing 3rd column style */
+        }
+
+        .hedest th {
+            color: #000;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .hedest th:first-child, .thing td:first-child { flex: 2; text-align: right; }
+        .hedest th:last-child, .thing td:nth-child(2) { flex: 1; text-align: center; }
+
+        .thing {
+            background: transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            display:none;
+        }
+
+        .thing:not(:last-child) {
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .thing:hover {
+            background: #f9fafb;
+            transform: none;
+            z-index: 10;
+            box-shadow: none;
+            border-radius: 0;
+            border-color: #ccc;
+            border-bottom-style: dashed;
+        }
+
+        .thing td {
+            padding: 12px 5px;
+            color: #000;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .thing td:nth-child(2) {
+            color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* ── Receipt Total Section ── */
+        .total-section {
+            width: 100%;
+            border-top: 2px dashed #000;
+            margin-top: 20px;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            direction: rtl; /* ensuring proper alignment in RTL */
+        }
+
+        .total-section p {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #000;
+        }
+
+        .total-section .pricee {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            color: #000;
+            font-weight: 800;
+            direction: ltr; /* Ensure AED format well */
+        }
+
+        /* Modern Trash Icon */
+        .thing td:nth-child(3) {
+            flex: 0 0 70px;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 0;
+        }
+
+        .icno {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px; /* Clean, modern square-ish shape */
+            color: #ef4444; /* Clean solid red icon */
+            background: #fef2f2; /* Very soft red background */
+            border: 1px solid #fee2e2;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Professional subtle shadow */
+        }
+
+        /* When the row is hovered, dim the border slightly */
+        .thing:hover .icno {
+            background: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        /* When you hover the button itself, it becomes solid and rises slightly */
+        .icno:hover {
+            color: #ffffff !important;
+            background: #ef4444 !important;
+            border-color: #ef4444 !important;
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.25), 
+                        0 2px 4px -2px rgba(239, 68, 68, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .icno:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        /* ── Responsive Mobile Card View ── */
+        @media (max-width: 650px) {
+            .print_area { padding: 30px 20px 50px 20px; border-radius: 0; }
+            .needs > div { background: transparent; border: none; box-shadow: none; }
+            .hedest { display: none; }
+            
+            .thing {
+                flex-direction: column;
+                padding: 10px 0;
+                border: none;
+                border-bottom: 1px dashed #ccc;
+                border-radius: 0;
+                margin-bottom: 0;
+                background: transparent;
+            }
+            .thing td { padding: 5px 0; border: none; }
+            .thing td:first-child {
+                flex: 1; width: 100%; text-align: right;
+                margin-bottom: 0px; padding-left: 50px;
+            }
+            .thing td:nth-child(2) {
+                flex: 1; width: 100%; text-align: right;
+            }
+            .thing td:nth-child(3) {
+                position: absolute; top: 10px; left: 0;
+                width: auto; flex: none; justify-content: center;
+            }
+        }
+
+        /* ── Print Media ── */
+        @media print {
+            body { background: white; padding: 0; display: block; }
+            .b { display: none !important; }
+            .print_area { 
+                box-shadow: none; border: none; margin: 0; padding: 20px; 
+                max-width: 100%; backdrop-filter: none; background: white;
+            }
+            .print_area::after { display: none; }
+            .needs > div { border: none; box-shadow: none; border-radius: 0; }
+            .hedest { background: transparent !important; border-bottom: 2px dashed #000; padding-left: 0; }
+            .thing { background: transparent; transform: none; box-shadow: none; border-bottom: 1px dashed #000; }
+            .thing:hover { transform: none; box-shadow: none; border-radius: 0; border-color: #000; }
+            .icno { display: none !important; }
+            .thing td:nth-child(3) { display: none; }
+        }
+    </style>
+    <button class="b">
+        <p>تحميل القائمة</p><i class="fa-solid fa-download" id="i"></i>
+    </button>
+    <div class="print_area">
+        <span class="robot" id="first"><i class="fa-solid fa-robot"></i></span>
+        <h1>AI helper</h1>
+        <div class="needs">
+            <div>
+                <table class="need" id="fa">
+                    <tr class="hedest">
+                        <th>item</th>
+                        <th>price </th>
+                    </tr>
+                    <tr class="thing">
+                        <td class="item"></td>
+                        <td class="price"></td>
+                        <td><i class="fa-solid fa-trash icno"></i></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="total-section">
+            <p>التكلفة الاجمالية</p>
+            <h3 class="pricee">0.00 AED </h3>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        if (window.localStorage.getItem("itemNames") && window.localStorage.getItem("prices")) {
+
+            if (typeof JSON.parse(window.localStorage.getItem("itemNames"))[0] === "string") {
+                let itemData = JSON.parse(window.localStorage.getItem("itemNames"));
+                let priceData = JSON.parse(window.localStorage.getItem("prices"));
+                let totalPrice = document.querySelector("pricee")
+                let itemArrayData = [];
+                let priceArrayData = [];
+                let table = document.querySelector(".need");
+                let deleteFunction = function (elementName,numberOfElement, arrayName, stringArrayName, loopVarible) {
+                    if (elementName.childNodes[numberOfElement].innerText === arrayName[loopVarible]) {
+                        arrayName.splice(arrayName.indexOf(elementName.childNodes[numberOfElement].innerText), 1)
+                        window.localStorage.setItem(stringArrayName, JSON.stringify(arrayName))
+                    }
+                }
+                for(let i = 0; i < itemData.length; i++){
+                //var declire
+                let divCloneCheak = document.querySelector(".thing").cloneNode(true);
+                let itemNameClone = divCloneCheak.childNodes[1];
+                let priceClone = divCloneCheak.childNodes[3];
+                let deleteButton = divCloneCheak.childNodes[5].childNodes[0];
+
+                //delete button fuction 
+                deleteButton.addEventListener("click",function(e){
+                    for(let i = 0; i < itemArrayEmpty.length; i++){
+                        deleteFunctionNewData(e.target.parentElement.parentElement,1,itemArrayEmpty,"itemNames",i);
+                        deleteFunctionNewData(e.target.parentElement.parentElement,3, priceArrayEmpty, "prices", i);
+                        divCloneCheak.remove();
+                        
+                    }
+                })
+
+                //Div style
+                divCloneCheak.style.display = "flex";
+                itemNameClone.prepend(document.createTextNode(itemData[i]));
+                priceClone.prepend(document.createTextNode(priceData[i]));
+                table.append(divCloneCheak);
+                };
+            };
+        };
+        let download_btn = document.querySelector(".b");
+        let print_area = document.querySelector(".print_area")
+        download_btn.onclick = function(){
+            let file_style = {
+                margin:2,
+                filename:"Home_Need",
+                image : {type:"text" , quality:0.98},
+                html2canvas : {scale:3},
+                jspdf : {unit:'in',format:"letter",orientation:"portrait"},
+                dirction : "rtl",
+            }
+             html2pdf().set(file_style).from(print_area).save();
+
+             
+        }
+    </script>
+    <script src="https://kit.fontawesome.com/57becdfcf2.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+
+</html>
