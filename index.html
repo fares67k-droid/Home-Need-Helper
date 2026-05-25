@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المساعد الذكي</title>
+    <meta name="icon" content="">
+    <link rel="stylesheet" href="style.css">
+    <link rel="html" href="./print_page.html">
+</head>
+
+<body>
+    <div class="alert">
+        <img src="./img/ads_for_helper.jpg" alt="">
+        <button class="okay">حسنا</button>
+    </div>
+    <span class="robot" id="first"><i class="fa-solid fa-robot"></i></span>
+    <h1>المساعد الذكي</h1>
+    <p class="decripe">كيف يمكني مساعتدك اليوم</p>
+    <div class="options">
+        <div class="option" id="op1">
+            <span class="icon1"><i class="fa-solid fa-cart-plus" style="color: #13ed5c;"></i></span>
+            <h2>طلبات البيت</h2>
+            <p>الطلبات الضرورية التي
+                لا يمكن الاستغناءعنها</p>
+        </div>
+        <!-- <div class="option" id="op2">
+            <span class="icon2"><i class="fa-solid fa-comments-dollar" style="color: #13ed5c;"></i></span>
+            <h2>طلب شيء </h2>
+            <p>اطلب شيء انت تحتاجه لكن بدون ان تسبب ازعاج</p>
+        </div>
+        <div class="option" id="op3">
+            <span class="icon2"><i class="fa-solid fa-triangle-exclamation" style="color: #13ed5c;"></i></span>
+            <h2>الابلاغ</h2>
+            <p>ابلغ عن مشكلة حدثت او اشتكي علي شخص ما</p>
+        </div>
+    </div> -->
+    <div class="home_need">
+        <div class="head">
+            <div class="right">
+                <span class="robot_x"><i class="fa-solid fa-robot"></i></span>
+                <div class="texto">
+                    <h3>طلبات البيت</h3>
+                    <p>المساعد الذكي</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-circle-xmark x" style="color: rgb(246, 37, 0);"></i>
+        </div>
+        <hr>
+        <div class="needs">
+            <div>
+                <table class="need">
+                    <tr class="hedest">
+                        <th>العنصر</th>
+                        <th>السعر التقديري</th>
+                    </tr>
+                    <tr class="thing">
+                        <td class="item"></td>
+                        <td class="price"></td>
+                        <td><i class="fa-solid fa-trash icno" id="i"></i></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <div class="end">
+            <div class="add">
+                <form action="">
+                    <input class="thi" type="text" name="" id="itemInput" placeholder="اسم المنتج">
+                    <input class="pre" type="number" name="" id="priceInput" placeholder="السعر">
+                    <button id="addButton">+</button>
+                </form>
+            </div>
+            <div class="print">
+                <div class="pr">
+                    <p>التكلفة الاجمالية</p>
+                    <h3 class="pricee">0.00 AED </h3>
+                </div>
+                <button class="c" id="downloadButton">
+                    <p>تحميل القائمة</p><i class="fa-solid fa-download" id="buttonIcon"></i>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/57becdfcf2.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+
+</html>
